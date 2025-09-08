@@ -6,7 +6,7 @@
  * ## EXAMPLES
  *
  *     # List available cron schedules
- *     $ wp cron schedule list
+ *     $ fp cron schedule list
  *     +------------+-------------+----------+
  *     | name       | display     | interval |
  *     +------------+-------------+----------+
@@ -61,7 +61,7 @@ class Cron_Schedule_Command extends WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 *     # List available cron schedules
-	 *     $ wp cron schedule list
+	 *     $ fp cron schedule list
 	 *     +------------+-------------+----------+
 	 *     | name       | display     | interval |
 	 *     +------------+-------------+----------+
@@ -71,7 +71,7 @@ class Cron_Schedule_Command extends WP_CLI_Command {
 	 *     +------------+-------------+----------+
 	 *
 	 *     # List id of available cron schedule
-	 *     $ wp cron schedule list --fields=name --format=ids
+	 *     $ fp cron schedule list --fields=name --format=ids
 	 *     hourly twicedaily daily
 	 *
 	 * @subcommand list
@@ -82,7 +82,7 @@ class Cron_Schedule_Command extends WP_CLI_Command {
 		$schedules = self::get_schedules();
 
 		if ( 'ids' === $formatter->format ) {
-			echo implode( ' ', wp_list_pluck( $schedules, 'name' ) );
+			echo implode( ' ', fp_list_pluck( $schedules, 'name' ) );
 		} else {
 			$formatter->display_items( $schedules );
 		}
@@ -106,7 +106,7 @@ class Cron_Schedule_Command extends WP_CLI_Command {
 	* @return array The array of cron schedules. Each schedule is itself an array.
 	*/
 	protected static function get_schedules() {
-		$schedules = wp_get_schedules();
+		$schedules = fp_get_schedules();
 		if ( ! empty( $schedules ) ) {
 			uasort( $schedules, 'Cron_Schedule_Command::sort' );
 			$schedules = array_map( 'Cron_Schedule_Command::format_schedule', $schedules, array_keys( $schedules ) );

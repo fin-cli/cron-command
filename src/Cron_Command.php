@@ -6,7 +6,7 @@
  * ## EXAMPLES
  *
  *     # Test WP Cron spawning system
- *     $ wp cron test
+ *     $ fp cron test
  *     Success: WP-Cron spawning is working as expected.
  */
 class Cron_Command extends WP_CLI_Command {
@@ -25,7 +25,7 @@ class Cron_Command extends WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 *     # Cron test runs successfully.
-	 *     $ wp cron test
+	 *     $ fp cron test
 	 *     Success: WP-Cron spawning is working as expected.
 	 */
 	public function test() {
@@ -40,12 +40,12 @@ class Cron_Command extends WP_CLI_Command {
 
 		$spawn = self::get_cron_spawn();
 
-		if ( is_wp_error( $spawn ) ) {
+		if ( is_fp_error( $spawn ) ) {
 			WP_CLI::error( sprintf( 'WP-Cron spawn failed with error: %s', $spawn->get_error_message() ) );
 		}
 
-		$code    = wp_remote_retrieve_response_code( $spawn );
-		$message = wp_remote_retrieve_response_message( $spawn );
+		$code    = fp_remote_retrieve_response_code( $spawn );
+		$message = fp_remote_retrieve_response_message( $spawn );
 
 		if ( 200 === $code ) {
 			WP_CLI::success( 'WP-Cron spawning is working as expected.' );
@@ -55,36 +55,36 @@ class Cron_Command extends WP_CLI_Command {
 	}
 
 	/**
-	 * Spawns a request to `wp-cron.php` and return the response.
+	 * Spawns a request to `fp-cron.php` and return the response.
 	 *
 	 * This function is designed to mimic the functionality in `spawn_cron()`
-	 * with the addition of returning the result of the `wp_remote_post()`
+	 * with the addition of returning the result of the `fp_remote_post()`
 	 * request.
 	 *
 	 * @return WP_Error|array The response or WP_Error on failure.
 	 */
 	protected static function get_cron_spawn() {
 
-		$doing_wp_cron = sprintf( '%.22F', microtime( true ) );
+		$doing_fp_cron = sprintf( '%.22F', microtime( true ) );
 
 		$cron_request_array = array(
-			'url'  => site_url( 'wp-cron.php?doing_wp_cron=' . $doing_wp_cron ),
-			'key'  => $doing_wp_cron,
+			'url'  => site_url( 'fp-cron.php?doing_fp_cron=' . $doing_fp_cron ),
+			'key'  => $doing_fp_cron,
 			'args' => array(
 				'timeout'   => 3,
 				'blocking'  => true,
-				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Calling native WordPress hook.
+				// phpcs:ignore FinPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Calling native FinPress hook.
 				'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
 			),
 		);
 
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Calling native WordPress hook.
+		// phpcs:ignore FinPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Calling native FinPress hook.
 		$cron_request = apply_filters( 'cron_request', $cron_request_array );
 
 		# Enforce a blocking request in case something that's hooked onto the 'cron_request' filter sets it to false
 		$cron_request['args']['blocking'] = true;
 
-		$result = wp_remote_post( $cron_request['url'], $cron_request['args'] );
+		$result = fp_remote_post( $cron_request['url'], $cron_request['args'] );
 
 		return $result;
 	}

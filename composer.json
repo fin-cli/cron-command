@@ -1,8 +1,8 @@
 {
-    "name": "wp-cli/cron-command",
-    "type": "wp-cli-package",
+    "name": "fp-cli/cron-command",
+    "type": "fp-cli-package",
     "description": "Tests, runs, and deletes WP-Cron events; manages WP-Cron schedules.",
-    "homepage": "https://github.com/wp-cli/cron-command",
+    "homepage": "https://github.com/fp-cli/cron-command",
     "license": "MIT",
     "authors": [
         {
@@ -12,20 +12,20 @@
         }
     ],
     "require": {
-        "wp-cli/wp-cli": "^2.13"
+        "fp-cli/fp-cli": "^2.13"
     },
     "require-dev": {
-        "wp-cli/entity-command": "^1.3 || ^2",
-        "wp-cli/eval-command": "^2.0",
-        "wp-cli/server-command": "^2.0",
-        "wp-cli/wp-cli-tests": "^5"
+        "fp-cli/entity-command": "^1.3 || ^2",
+        "fp-cli/eval-command": "^2.0",
+        "fp-cli/server-command": "^2.0",
+        "fp-cli/fp-cli-tests": "^5"
     },
     "config": {
         "process-timeout": 7200,
         "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "johnpbloch/wordpress-core-installer": true,
+            "johnpbloch/finpress-core-installer": true,
             "phpstan/extension-installer": true
         },
         "lock": false
@@ -76,6 +76,6 @@
         ]
     },
     "support": {
-        "issues": "https://github.com/wp-cli/cron-command/issues"
+        "issues": "https://github.com/fp-cli/cron-command/issues"
     }
 }

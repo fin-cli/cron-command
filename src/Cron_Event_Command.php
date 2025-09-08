@@ -8,24 +8,24 @@ use WP_CLI\Utils;
  * ## EXAMPLES
  *
  *     # Schedule a new cron event
- *     $ wp cron event schedule cron_test
+ *     $ fp cron event schedule cron_test
  *     Success: Scheduled event with hook 'cron_test' for 2016-05-31 10:19:16 GMT.
  *
  *     # Run all cron events due right now
- *     $ wp cron event run --due-now
+ *     $ fp cron event run --due-now
  *     Executed the cron event 'cron_test_1' in 0.01s.
  *     Executed the cron event 'cron_test_2' in 0.006s.
  *     Success: Executed a total of 2 cron events.
  *
  *     # Delete all scheduled cron events for the given hook
- *     $ wp cron event delete cron_test
+ *     $ fp cron event delete cron_test
  *     Success: Deleted a total of 2 cron events.
  *
  *     # List scheduled cron events in JSON
- *     $ wp cron event list --fields=hook,next_run --format=json
- *     [{"hook":"wp_version_check","next_run":"2016-05-31 10:15:13"},{"hook":"wp_update_plugins","next_run":"2016-05-31 10:15:13"},{"hook":"wp_update_themes","next_run":"2016-05-31 10:15:14"}]
+ *     $ fp cron event list --fields=hook,next_run --format=json
+ *     [{"hook":"fp_version_check","next_run":"2016-05-31 10:15:13"},{"hook":"fp_update_plugins","next_run":"2016-05-31 10:15:13"},{"hook":"fp_update_themes","next_run":"2016-05-31 10:15:14"}]
  *
- * @package wp-cli
+ * @package fp-cli
  */
 class Cron_Event_Command extends WP_CLI_Command {
 	/**
@@ -89,18 +89,18 @@ class Cron_Event_Command extends WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 *     # List scheduled cron events
-	 *     $ wp cron event list
+	 *     $ fp cron event list
 	 *     +-------------------+---------------------+---------------------+------------+
 	 *     | hook              | next_run_gmt        | next_run_relative   | recurrence |
 	 *     +-------------------+---------------------+---------------------+------------+
-	 *     | wp_version_check  | 2016-05-31 22:15:13 | 11 hours 57 minutes | 12 hours   |
-	 *     | wp_update_plugins | 2016-05-31 22:15:13 | 11 hours 57 minutes | 12 hours   |
-	 *     | wp_update_themes  | 2016-05-31 22:15:14 | 11 hours 57 minutes | 12 hours   |
+	 *     | fp_version_check  | 2016-05-31 22:15:13 | 11 hours 57 minutes | 12 hours   |
+	 *     | fp_update_plugins | 2016-05-31 22:15:13 | 11 hours 57 minutes | 12 hours   |
+	 *     | fp_update_themes  | 2016-05-31 22:15:14 | 11 hours 57 minutes | 12 hours   |
 	 *     +-------------------+---------------------+---------------------+------------+
 	 *
 	 *     # List scheduled cron events in JSON
-	 *     $ wp cron event list --fields=hook,next_run --format=json
-	 *     [{"hook":"wp_version_check","next_run":"2016-05-31 10:15:13"},{"hook":"wp_update_plugins","next_run":"2016-05-31 10:15:13"},{"hook":"wp_update_themes","next_run":"2016-05-31 10:15:14"}]
+	 *     $ fp cron event list --fields=hook,next_run --format=json
+	 *     [{"hook":"fp_version_check","next_run":"2016-05-31 10:15:13"},{"hook":"fp_update_plugins","next_run":"2016-05-31 10:15:13"},{"hook":"fp_update_themes","next_run":"2016-05-31 10:15:14"}]
 	 *
 	 * @subcommand list
 	 */
@@ -109,7 +109,7 @@ class Cron_Event_Command extends WP_CLI_Command {
 
 		$events = self::get_cron_events();
 
-		if ( is_wp_error( $events ) ) {
+		if ( is_fp_error( $events ) ) {
 			$events = array();
 		}
 
@@ -123,7 +123,7 @@ class Cron_Event_Command extends WP_CLI_Command {
 		}
 
 		if ( 'ids' === $formatter->format ) {
-			echo implode( ' ', wp_list_pluck( $events, 'hook' ) );
+			echo implode( ' ', fp_list_pluck( $events, 'hook' ) );
 		} else {
 			$formatter->display_items( $events );
 		}
@@ -141,7 +141,7 @@ class Cron_Event_Command extends WP_CLI_Command {
 	 * : A Unix timestamp or an English textual datetime description compatible with `strtotime()`. Defaults to now.
 	 *
 	 * [<recurrence>]
-	 * : How often the event should recur. See `wp cron schedule list` for available schedule names. Defaults to no recurrence.
+	 * : How often the event should recur. See `fp cron schedule list` for available schedule names. Defaults to no recurrence.
 	 *
 	 * [--<field>=<value>]
 	 * : Arguments to pass to the hook for the event. <field> should be a numeric key, not a string.
@@ -149,15 +149,15 @@ class Cron_Event_Command extends WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 *     # Schedule a new cron event
-	 *     $ wp cron event schedule cron_test
+	 *     $ fp cron event schedule cron_test
 	 *     Success: Scheduled event with hook 'cron_test' for 2016-05-31 10:19:16 GMT.
 	 *
 	 *     # Schedule new cron event with hourly recurrence
-	 *     $ wp cron event schedule cron_test now hourly
+	 *     $ fp cron event schedule cron_test now hourly
 	 *     Success: Scheduled event with hook 'cron_test' for 2016-05-31 10:20:32 GMT.
 	 *
 	 *     # Schedule new cron event and pass arguments
-	 *     $ wp cron event schedule cron_test '+1 hour' --0=first-argument --1=second-argument
+	 *     $ fp cron event schedule cron_test '+1 hour' --0=first-argument --1=second-argument
 	 *     Success: Scheduled event with hook 'cron_test' for 2016-05-31 11:21:35 GMT.
 	 *
 	 * @param array{0: string, 1?: string, 2?: string} $args Positional arguments.
@@ -187,22 +187,22 @@ class Cron_Event_Command extends WP_CLI_Command {
 
 		if ( ! empty( $recurrence ) ) {
 
-			$schedules = wp_get_schedules();
+			$schedules = fp_get_schedules();
 
 			if ( ! isset( $schedules[ $recurrence ] ) ) {
 				WP_CLI::error( sprintf( "'%s' is not a valid schedule name for recurrence.", $recurrence ) );
 			}
 
-			$event = wp_schedule_event( $timestamp, $recurrence, $hook, $assoc_args );
+			$event = fp_schedule_event( $timestamp, $recurrence, $hook, $assoc_args );
 
 		} else {
 
-			$event = wp_schedule_single_event( $timestamp, $hook, $assoc_args );
+			$event = fp_schedule_single_event( $timestamp, $hook, $assoc_args );
 
 		}
 
 		if ( false !== $event ) {
-			WP_CLI::success( sprintf( "Scheduled event with hook '%s' for %s GMT.", $hook, date( self::$time_format, $timestamp ) ) ); //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+			WP_CLI::success( sprintf( "Scheduled event with hook '%s' for %s GMT.", $hook, date( self::$time_format, $timestamp ) ) ); //phpcs:ignore FinPress.DateTime.RestrictedFunctions.date_date
 		} else {
 			WP_CLI::error( 'Event not scheduled.' );
 		}
@@ -228,7 +228,7 @@ class Cron_Event_Command extends WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 *     # Run all cron events due right now
-	 *     $ wp cron event run --due-now
+	 *     $ fp cron event run --due-now
 	 *     Executed the cron event 'cron_test_1' in 0.01s.
 	 *     Executed the cron event 'cron_test_2' in 0.006s.
 	 *     Success: Executed a total of 2 cron events.
@@ -237,7 +237,7 @@ class Cron_Event_Command extends WP_CLI_Command {
 
 		$events = self::get_selected_cron_events( $args, $assoc_args );
 
-		if ( is_wp_error( $events ) ) {
+		if ( is_fp_error( $events ) ) {
 			WP_CLI::error( $events );
 		}
 
@@ -265,14 +265,14 @@ class Cron_Event_Command extends WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 *     # Unschedule a cron event on given hook.
-	 *     $ wp cron event unschedule cron_test
+	 *     $ fp cron event unschedule cron_test
 	 *     Success: Unscheduled 2 events for hook 'cron_test'.
 	 */
 	public function unschedule( $args, $assoc_args ) {
 
 		list( $hook ) = $args;
 
-		$unscheduled = wp_unschedule_hook( $hook );
+		$unscheduled = fp_unschedule_hook( $hook );
 
 		if ( empty( $unscheduled ) ) {
 			$message = 'Failed to unschedule events for hook \'%1\$s.';
@@ -316,13 +316,13 @@ class Cron_Event_Command extends WP_CLI_Command {
 	 * ## EXAMPLES
 	 *
 	 *     # Delete all scheduled cron events for the given hook
-	 *     $ wp cron event delete cron_test
+	 *     $ fp cron event delete cron_test
 	 *     Success: Deleted a total of 2 cron events.
 	 */
 	public function delete( $args, $assoc_args ) {
 		$events = self::get_selected_cron_events( $args, $assoc_args );
 
-		if ( is_wp_error( $events ) ) {
+		if ( is_fp_error( $events ) ) {
 			WP_CLI::error( $events );
 		}
 
@@ -349,17 +349,17 @@ class Cron_Event_Command extends WP_CLI_Command {
 	protected static function run_event( stdClass $event ) {
 
 		if ( ! defined( 'DOING_CRON' ) ) {
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Using native WordPress constant.
+			// phpcs:ignore FinPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Using native FinPress constant.
 			define( 'DOING_CRON', true );
 		}
 
 		if ( false !== $event->schedule ) {
-			wp_reschedule_event( $event->time, $event->schedule, $event->hook, $event->args );
+			fp_reschedule_event( $event->time, $event->schedule, $event->hook, $event->args );
 		}
 
-		wp_unschedule_event( $event->time, $event->hook, $event->args );
+		fp_unschedule_event( $event->time, $event->hook, $event->args );
 
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound -- Can't prefix dynamic hooks here, calling registered hooks.
+		// phpcs:ignore FinPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound -- Can't prefix dynamic hooks here, calling registered hooks.
 		do_action_ref_array( $event->hook, $event->args );
 
 		return true;
@@ -378,7 +378,7 @@ class Cron_Event_Command extends WP_CLI_Command {
 			return false;
 		}
 
-		wp_unschedule_event( $event->time, $event->hook, $event->args );
+		fp_unschedule_event( $event->time, $event->hook, $event->args );
 		return true;
 	}
 
@@ -390,10 +390,10 @@ class Cron_Event_Command extends WP_CLI_Command {
 	 */
 	protected static function format_event( stdClass $event ) {
 
-		$schedules                = wp_get_schedules();
+		$schedules                = fp_get_schedules();
 		$event->recurrence        = ( isset( $schedules[ $event->schedule ] ) ) ? self::interval( $event->interval ) : 'Non-repeating';
-		$event->next_run          = get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), self::$time_format ); //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-		$event->next_run_gmt      = date( self::$time_format, $event->time ); //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+		$event->next_run          = get_date_from_gmt( date( 'Y-m-d H:i:s', $event->time ), self::$time_format ); //phpcs:ignore FinPress.DateTime.RestrictedFunctions.date_date
+		$event->next_run_gmt      = date( self::$time_format, $event->time ); //phpcs:ignore FinPress.DateTime.RestrictedFunctions.date_date
 		$event->next_run_relative = self::interval( $event->time - time() );
 
 		return $event;
@@ -406,9 +406,9 @@ class Cron_Event_Command extends WP_CLI_Command {
 	 */
 	protected static function get_cron_events( $is_due_now = false ) {
 
-		// wp_get_ready_cron_jobs since 5.1.0
-		if ( $is_due_now && function_exists( 'wp_get_ready_cron_jobs' ) ) {
-			$crons = wp_get_ready_cron_jobs();
+		// fp_get_ready_cron_jobs since 5.1.0
+		if ( $is_due_now && function_exists( 'fp_get_ready_cron_jobs' ) ) {
+			$crons = fp_get_ready_cron_jobs();
 		} else {
 			$crons = _get_cron_array();
 		}
@@ -482,11 +482,11 @@ class Cron_Event_Command extends WP_CLI_Command {
 
 		$events = self::get_cron_events();
 
-		if ( is_wp_error( $events ) ) {
+		if ( is_fp_error( $events ) ) {
 			return $events;
 		}
 
-		$hooks = wp_list_pluck( $events, 'hook' );
+		$hooks = fp_list_pluck( $events, 'hook' );
 		foreach ( $args as $hook ) {
 			if ( ! in_array( $hook, $hooks, true ) ) {
 				WP_CLI::error( sprintf( "Invalid cron event '%s'", $hook ) );
@@ -535,7 +535,7 @@ class Cron_Event_Command extends WP_CLI_Command {
 	/**
 	 * Converts a time interval into human-readable format.
 	 *
-	 * Similar to WordPress' built-in `human_time_diff()` but returns two time period chunks instead of just one.
+	 * Similar to FinPress' built-in `human_time_diff()` but returns two time period chunks instead of just one.
 	 *
 	 * @param int $since An interval of time in seconds
 	 * @return string The interval in human readable format
