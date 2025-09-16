@@ -46,7 +46,7 @@
 		<properties>
 			<property name="prefixes" type="array">
 				<element value="WP_CLI\Cron"/><!-- Namespaces. -->
-				<element value="fpcli_cron"/><!-- Global variables and such. -->
+				<element value="fincli_cron"/><!-- Global variables and such. -->
 			</property>
 		</properties>
 	</rule>
